@@ -1,0 +1,162 @@
+[
+  {
+    "id": 3,
+    "type": "singleChoice",
+    "title": {
+      "en": "Did you buy something at HomeMart store today?",
+      "vi": "Anh/Chị có mua sản phẩm gì tại cửa hàng HomeMart vào hôm nay không?"
+    },
+    "option": [
+      {
+        "title": {
+          "en": "Yes",
+          "vi": "Có"
+        }
+      },
+      {
+        "title": {
+          "en": "No, I just take a look",
+          "vi": "Không, tôi chỉ đi dạo ở cửa hàng và không có ý định mua gì."
+        }
+      },
+      {
+        "title": {
+          "en": "No, but I was looking for something, I was looking for something",
+          "vi": "Không, nhưng tôi đang tìm kiếm một vài sản phẩm."
+        }
+      },
+      {
+        "otherSpecify": true,
+        "title": {
+          "en": "Others, specify",
+          "vi": "Khác, ghi rõ"
+        }
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "type": "shortAnswer",
+    "title": {
+      "en": "What is your 3 first things which come to your mind about HomeMart?",
+      "vi": "Anh/chị vui lòng cho biết 3 điều đầu tiên anh/chị nghĩ tới khi nói về cửa hàng HomeMart là gì? "
+    }
+  },
+  {
+    "id": 2,
+    "type": "singleChoice",
+    "title": {
+      "en": "Would you like Homemart has an app for ordering and delivery?",
+      "vi": " Anh/Chị có cảm thấy hào hứng khi HomeMart xây dựng một ứng dụng đặt hàng và giao hàng không?"
+    },
+    "option": [
+      {
+        "title": {
+          "en": "Yes",
+          "vi": "Có"
+        }
+      },
+      {
+        "title": {
+          "en": "No",
+          "vi": "Không"
+        }
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "type": "multipleChoice",
+    "title": {
+      "en": "Which items have you purchased today at HomeMart?",
+      "vi": "Anh/Chị mua sản phẩm gì tại HomeMart hôm nay?"
+    },
+    "option": [
+      {
+        "title": {
+          "en": "Sport equipment, specify",
+          "vi": "Dụng cụ thể thao, ghi rõ "
+        }
+      },
+      {
+        "title": {
+          "en": "Stationery, specify",
+          "vi": "Văn phòng phẩm, ghi rõ "
+        }
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "type": "multipleChoice",
+    "title": {
+      "en": "Why have you purchased that product at HomeMart today?",
+      "vi": "Vui lòng cho biết lý do anh/chị lựa chọn mua sắm tại cửa hàng HomeMart hôm nay?"
+    },
+    "option": [
+      {
+        "title": {
+          "en": "Promotion",
+          "vi": "Chương trình khuyến mãi"
+        }
+      },
+      {
+        "title": {
+          "en": "Staff (friendly, good advise, professional)",
+          "vi": "Nhân viên (thân thiện, tư vấn nhiệt tình…)"
+        }
+      },
+      {
+        "otherSpecify": true,
+        "title": {
+          "en": "Other (specify)",
+          "vi": "Khác, ghi rõ"
+        }
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "type": "linearScale",
+    "title": {
+      "en": "How would you rate HomeMart?",
+      "vi": "Anh/chị đánh giá HomeMart như thế nào?"
+    }
+  },
+  {
+    "id": 7,
+    "type": "linearScaleGrid",
+    "title": {
+      "en": "How would you rate HomeMart regarding the following factors?",
+      "vi": "Anh/chị đánh giá những yếu tố dưới đây tại HomeMart như thế nào?"
+    },
+    "option": [
+      {
+        "title": {
+          "en": "Value for money",
+          "vi": "Giá cả hợp lý?"
+        }
+      },
+      {
+        "title": {
+          "en": "Promotion",
+          "vi": "Chương trình khuyến mãi"
+        }
+      },
+      {
+        "title": {
+          "en": "Variety assortments",
+          "vi": "Đa dạng chủng loại sản phẩm "
+        }
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "type": "shortAnswer",
+    "title": {
+      "en": "Other feedback",
+      "vi": "Đánh giá khác"
+    }
+  }
+]
