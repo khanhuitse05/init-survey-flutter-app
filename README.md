@@ -1,6 +1,13 @@
-# init Survey
+# Survey Flutter App
 
-[Demo](https://forms.gle/yDqRS22fkzAYp36j7)
+- [Link Demo](https://forms.gle/yDqRS22fkzAYp36j7)
+
+## Question:
+* [x] Paragraph
+* [x] Multiple choice
+* [x] Checkboxes
+* [x] Linear Scale
+* [x] Linear Scale Grid
 
 ## Screen shot
 
