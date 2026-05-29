@@ -1,47 +1,49 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageManager {
-  static const String storageDomain = "my_app_storage_key";
+  static const String storageDomain = 'my_app_storage_key';
 
-  static setObject(String keyName, dynamic keyValue) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
+  static Future<void> setObject(String keyName, dynamic keyValue) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
 
     switch (keyValue.runtimeType) {
       case String:
-        pref.setString(storageDomain + keyName, keyValue);
+        await pref.setString(storageDomain + keyName, keyValue as String);
         break;
       case int:
-        pref.setInt(storageDomain + keyName, keyValue);
+        await pref.setInt(storageDomain + keyName, keyValue as int);
         break;
       case bool:
-        pref.setBool(storageDomain + keyName, keyValue);
+        await pref.setBool(storageDomain + keyName, keyValue as bool);
         break;
       case double:
-        pref.setDouble(storageDomain + keyName, keyValue);
+        await pref.setDouble(storageDomain + keyName, keyValue as double);
         break;
       case List:
-        pref.setStringList(storageDomain + keyName, keyValue);
+        await pref.setStringList(
+            storageDomain + keyName, keyValue as List<String>);
         break;
     }
   }
 
-  static dynamic getObjectByKey(String keyName) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
+  static Future<dynamic> getObjectByKey(String keyName) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.get(storageDomain + keyName);
   }
 
-  static containsKey(String keyName) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  static Future<bool> containsKey(String keyName) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.containsKey(storageDomain + keyName);
   }
 
-  static clearAll() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.clear();
+  static Future<void> clearAll() async {
+    final SharedPreferences preferences =
+        await SharedPreferences.getInstance();
+    await preferences.clear();
   }
 
-  static clearObjectByKey(String keyName) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.remove(storageDomain + keyName);
+  static Future<void> clearObjectByKey(String keyName) async {
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.remove(storageDomain + keyName);
   }
 }

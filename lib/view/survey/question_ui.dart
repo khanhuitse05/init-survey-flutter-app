@@ -10,12 +10,12 @@ import 'package:initsurvey/view/survey/question/question_short_answer.dart';
 import 'package:provider/provider.dart';
 
 class QuestionUI extends StatefulWidget {
-  const QuestionUI(this.index, {Key key}) : super(key: key);
+  const QuestionUI(this.index, {super.key});
 
   final int index;
 
   @override
-  _QuestionUIState createState() => _QuestionUIState();
+  State<QuestionUI> createState() => _QuestionUIState();
 }
 
 class _QuestionUIState extends State<QuestionUI> {
@@ -31,8 +31,8 @@ class _QuestionUIState extends State<QuestionUI> {
           padding:
               const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 30),
           child: Text(
-            '${question.id}. ${question.title.text}',
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+            '${question.id}. ${question.title?.text ?? ''}',
+            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
           ),
         ),
         Padding(
@@ -45,28 +45,23 @@ class _QuestionUIState extends State<QuestionUI> {
   }
 
   Widget buildContent(BuildContext context, int index,
-      {Question question, QuestionResult result}) {
+      {required Question question, required QuestionResult result}) {
     switch (question.type) {
       case QuestionType.singleChoice:
         return QuestionSingleChoice(
             index: index, question: question, result: result);
-        break;
       case QuestionType.multipleChoice:
         return QuestionMultipleChoice(
             index: index, question: question, result: result);
-        break;
       case QuestionType.linearScale:
         return QuestionLinearScale(
             index: index, question: question, result: result);
-        break;
       case QuestionType.linearScaleGrid:
         return QuestionLinearScaleGrid(
             index: index, question: question, result: result);
-        break;
       default:
         return QuestionShortAnswer(
             index: index, question: question, result: result);
-        break;
     }
   }
 }

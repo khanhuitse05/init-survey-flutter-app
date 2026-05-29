@@ -5,7 +5,7 @@ import 'package:initsurvey/model/survey_result.dart';
 import 'package:initsurvey/repository/survey_repository.dart';
 
 class SyncSurveyProvider with ChangeNotifier {
-  List<SurveyResult> surveys;
+  List<SurveyResult>? surveys;
 
   bool get hasData => Utility.isNullOrEmpty(surveys) == false;
 
@@ -14,22 +14,19 @@ class SyncSurveyProvider with ChangeNotifier {
     loadLocaleSurvey();
   }
 
-  loadLocaleSurvey() async {
-    var _data = await StorageManager.getObjectByKey('survey_result');
+  Future<void> loadLocaleSurvey() async {
+    final _data = await StorageManager.getObjectByKey('survey_result');
     if (_data != null) {
-      if (_data != null) {
-        surveys = new List<SurveyResult>();
-        _data.forEach((v) {
-          surveys.add(new SurveyResult.fromJson(v));
-        });
-//        asyncSurveys();
-      }
+      surveys = [];
+      (_data as List).forEach((v) {
+        surveys!.add(SurveyResult.fromJson(v as Map<String, dynamic>));
+      });
     } else {
-      this.surveys = null;
+      surveys = null;
     }
   }
 
-  bool _isLoading;
+  bool _isLoading = false;
 
   bool get isLoading => _isLoading;
 
@@ -38,13 +35,13 @@ class SyncSurveyProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  asyncSurveys() async {
+  Future<void> asyncSurveys() async {
     isLoading = true;
     while (hasData) {
-      var _survey = surveys[0];
-      var result = await SurveyRepository.sent(_survey);
+      final _survey = surveys!.first;
+      final result = await SurveyRepository.sent(_survey);
       if (result['status'] == 'success') {
-        surveys.removeAt(0);
+        surveys!.removeAt(0);
       } else {
         isLoading = false;
         return;

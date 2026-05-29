@@ -7,28 +7,22 @@ import 'package:initsurvey/view/survey/question/option/option_choice_ui.dart';
 import 'package:initsurvey/view/survey/question/option/option_input_ui.dart';
 
 class QuestionMultipleChoice extends StatefulWidget {
-  const QuestionMultipleChoice({this.index, this.question, this.result});
+  const QuestionMultipleChoice({
+    required this.index,
+    required this.question,
+    required this.result,
+  });
 
   final int index;
   final Question question;
   final QuestionResult result;
 
   @override
-  _QuestionMultipleChoiceState createState() => _QuestionMultipleChoiceState();
+  State<QuestionMultipleChoice> createState() => _QuestionMultipleChoiceState();
 }
 
 class _QuestionMultipleChoiceState extends State<QuestionMultipleChoice> {
-  @override
-  Widget build(BuildContext context) {
-    final Question question = widget.question;
-
-    return Column(children: [
-      for (int i = 0; i < question.option.length; i++)
-        _buildOption(i, question.option[i])
-    ]);
-  }
-
-  TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {
@@ -37,7 +31,7 @@ class _QuestionMultipleChoiceState extends State<QuestionMultipleChoice> {
     if (Utility.isNullOrEmpty(widget.result.answers)) {
       for (int i = 0; i < widget.question.option.length; i++) {
         widget.result.answers.add(
-            Answer(result: "", option: widget.question.option[i].title.en));
+            Answer(result: "", option: widget.question.option[i].title?.en ?? ''));
       }
     } else {
       for (int i = 0; i < widget.question.option.length; i++) {
@@ -47,6 +41,16 @@ class _QuestionMultipleChoiceState extends State<QuestionMultipleChoice> {
         }
       }
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Question question = widget.question;
+
+    return Column(children: [
+      for (int i = 0; i < question.option.length; i++)
+        _buildOption(i, question.option[i])
+    ]);
   }
 
   Widget _buildOption(int index, Option option) {
@@ -65,7 +69,8 @@ class _QuestionMultipleChoiceState extends State<QuestionMultipleChoice> {
         child: TextField(
           controller: controller,
           decoration: InputDecoration(
-              labelText: option.title.text, border: InputBorder.none),
+              labelText: option.title?.text ?? '',
+              border: InputBorder.none),
           onChanged: (value) {
             if (result.answers[index].result.isEmpty != value.isEmpty) {
               setState(() {
@@ -79,7 +84,7 @@ class _QuestionMultipleChoiceState extends State<QuestionMultipleChoice> {
       );
     } else {
       return OptionChoiceUI(
-        title: option.title.text,
+        title: option.title?.text ?? '',
         isChoose: isChoose,
         onPressed: () {
           FocusScope.of(context).unfocus();

@@ -23,11 +23,9 @@ class ResultView extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32.0),
                   child: Column(
-                    // shrinkWrap: true,
                     mainAxisAlignment: MainAxisAlignment.center,
-
                     children: <Widget>[
-                      Container(
+                      SizedBox(
                         height: 200,
                         child: Image.asset("assets/images/ui/survey-icon.png"),
                       ),
@@ -36,8 +34,8 @@ class ResultView extends StatelessWidget {
                         AppTranslations.of(context).text('lw_congratulation'),
                         style: Theme.of(context)
                             .textTheme
-                            .display1
-                            .merge(TextStyle(color: Colors.green)),
+                            .displayLarge
+                            ?.merge(const TextStyle(color: Colors.green)),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),
@@ -56,10 +54,10 @@ class ResultView extends StatelessWidget {
                                 AppTranslations.of(context)
                                     .text('lw_win_btn')
                                     .toUpperCase(),
-                                style: TextStyle(color: Colors.white),
+                                style: const TextStyle(color: Colors.white),
                               ),
                               const SizedBox(width: 10),
-                              Icon(
+                              const Icon(
                                 Icons.arrow_forward,
                                 color: Colors.white,
                               )

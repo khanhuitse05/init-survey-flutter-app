@@ -8,16 +8,21 @@ import 'package:initsurvey/ui/button/select_button.dart';
 import 'package:initsurvey/ui/utility/indicator.dart';
 
 class AdministrationsSheet extends StatefulWidget {
-  const AdministrationsSheet(
-      {this.level, this.parentCode, this.onSelect, this.currentCode});
+  const AdministrationsSheet({
+    super.key,
+    required this.level,
+    this.parentCode,
+    required this.onSelect,
+    this.currentCode,
+  });
 
-  final String parentCode;
+  final String? parentCode;
   final AdministrationsLevel level;
   final ValueChanged<Administrations> onSelect;
-  final String currentCode;
+  final String? currentCode;
 
   @override
-  _AdministrationsSheetState createState() => _AdministrationsSheetState();
+  State<AdministrationsSheet> createState() => _AdministrationsSheetState();
 }
 
 class _AdministrationsSheetState extends State<AdministrationsSheet> {
@@ -28,9 +33,9 @@ class _AdministrationsSheetState extends State<AdministrationsSheet> {
     _loadListRegion();
   }
 
-  bool isLoading;
+  bool isLoading = true;
 
-  Future _loadListRegion() async {
+  Future<void> _loadListRegion() async {
     List<Administrations> _temp;
     switch (widget.level) {
       case AdministrationsLevel.province:
@@ -60,27 +65,28 @@ class _AdministrationsSheetState extends State<AdministrationsSheet> {
   Future<List<Administrations>> _loadListRegionByFile(String fileName) async {
     try {
       final String jsonContent = await rootBundle.loadString(fileName);
-      final message = json.decode(jsonContent);
+      final message = json.decode(jsonContent) as Map<String, dynamic>;
       final List<Administrations> data = [];
       for (final key in message.keys) {
-        final _temp = Administrations.fromJsonMap(message[key]);
+        final _temp =
+            Administrations.fromJsonMap(message[key] as Map<String, dynamic>);
         data.add(_temp);
       }
       return data;
     } catch (e) {
-      debugPrint("Load file fail: $e");
-      return null;
+      debugPrint('Load file fail: $e');
+      return [];
     }
   }
 
-  List<Administrations> regions;
-  List<Administrations> regionsFilter;
+  List<Administrations>? regions;
+  List<Administrations>? regionsFilter;
   TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     if (regions != null && Utility.isNullOrEmpty(controller.text) == false) {
-      regionsFilter = regions
+      regionsFilter = regions!
           .where((item) =>
               item.name.toLowerCase().contains(controller.text.toLowerCase()))
           .toList();
@@ -107,7 +113,7 @@ class _AdministrationsSheetState extends State<AdministrationsSheet> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -115,7 +121,7 @@ class _AdministrationsSheetState extends State<AdministrationsSheet> {
                 Expanded(
                     child: Text(
                   _getTitleByLevel(widget.level),
-                  style: Theme.of(context).textTheme.title,
+                  style: Theme.of(context).textTheme.titleLarge,
                   textAlign: TextAlign.center,
                 )),
                 const SizedBox(width: 40),
@@ -142,11 +148,11 @@ class _AdministrationsSheetState extends State<AdministrationsSheet> {
             ),
             child: TextField(
                 controller: controller,
-                style: Theme.of(context).textTheme.body1,
+                style: Theme.of(context).textTheme.bodyMedium,
                 showCursor: true,
                 cursorColor: Colors.black87,
                 textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     icon: Icon(
                       Icons.search,
                     ),
@@ -154,7 +160,7 @@ class _AdministrationsSheetState extends State<AdministrationsSheet> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     fillColor: Colors.transparent,
-                    hintStyle: const TextStyle(fontStyle: FontStyle.italic),
+                    hintStyle: TextStyle(fontStyle: FontStyle.italic),
                     hintText: 'Tìm kiếm'),
                 onSubmitted: (text) {}),
           ),
@@ -168,10 +174,10 @@ class _AdministrationsSheetState extends State<AdministrationsSheet> {
   }
 
   Widget _buildData() {
-    if (regions == null) {
+    if (isLoading || regions == null) {
       return const Center(child: Indicator());
     }
-    if (regions.isEmpty) {
+    if (regions!.isEmpty) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         alignment: Alignment.center,
@@ -180,7 +186,7 @@ class _AdministrationsSheetState extends State<AdministrationsSheet> {
     } else {
       return ListView(
         padding: const EdgeInsets.fromLTRB(15, 0, 25, 15),
-        children: regionsFilter.map((item) {
+        children: regionsFilter!.map((item) {
           return SelectButton(
             title: item.name,
             onPressed: () {
@@ -198,16 +204,12 @@ class _AdministrationsSheetState extends State<AdministrationsSheet> {
     switch (level) {
       case AdministrationsLevel.province:
         return 'Tỉnh thành';
-        break;
       case AdministrationsLevel.district:
         return 'Quận/Huyện';
-        break;
       case AdministrationsLevel.wards:
         return 'Phường/Xã';
-        break;
       default:
         return 'Địa chỉ';
-        break;
     }
   }
 }

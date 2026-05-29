@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:initsurvey/core/utility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -8,64 +7,62 @@ import 'package:http/http.dart' as http;
 
 import 'application.dart';
 
+late AppTranslations appTranslations;
+
 class AppTranslations {
-  Map<dynamic, dynamic> localisedValues = new Map();
+  Map<dynamic, dynamic> localisedValues = {};
 
   AppTranslations(Locale newLocale) {
     locale = newLocale;
   }
 
   static AppTranslations of(BuildContext context) {
-    return Localizations.of<AppTranslations>(context, AppTranslations);
+    return Localizations.of<AppTranslations>(context, AppTranslations)!;
   }
 
   static Future<AppTranslations> load(Locale locale) async {
     appTranslations = AppTranslations(locale);
     Map<dynamic, dynamic> _tmpLocale;
-    String _localeCode = locale.languageCode;
-    // Load multiple language file
-    for (int i = 0; i < Application.instance.locale[_localeCode].length; i++) {
-      String jsonContent = await rootBundle.loadString(
-          "assets/locale/$_localeCode/${Application.instance.locale[_localeCode][i]}.json");
+    final String _localeCode = locale.languageCode;
+    for (int i = 0;
+        i < Application.instance.locale[_localeCode]!.length;
+        i++) {
+      final String jsonContent = await rootBundle.loadString(
+          'assets/locale/$_localeCode/${Application.instance.locale[_localeCode]![i]}.json');
       _tmpLocale = json.decode(jsonContent);
       appTranslations.localisedValues.addAll(_tmpLocale);
     }
-    // Load Remote
     try {
       final response = await http
-          .get(Application.instance.remoteUrl + 'remote_${locale.languageCode}.json')
-          .timeout(Duration(seconds: 5));
-      if (response.statusCode == HttpStatus.ok) {
+          .get(Uri.parse(
+              '${Application.instance.remoteUrl}remote_${locale.languageCode}.json'))
+          .timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
         if (Utility.isNullOrEmpty(response.body) == false) {
           _tmpLocale = json.decode(utf8.decode(response.bodyBytes));
           appTranslations.localisedValues.addAll(_tmpLocale);
         }
       }
     } catch (e) {
-      print("Decode locale remote fail");
+      debugPrint('Decode locale remote fail');
     }
-    // return
     return appTranslations;
   }
 
+  late Locale locale;
+  String get currentLanguage => locale.languageCode;
 
-  Locale locale;
-  get currentLanguage => locale.languageCode;
-  /// Detects if _localisedValues has the given key
-  /// for translation
   bool isKeyExist(String key) => localisedValues.containsKey(key);
 
   String text(String key) {
-    return localisedValues[key] ?? "$key";
+    return localisedValues[key]?.toString() ?? key;
   }
 
   String textFormat(String key, List<dynamic> replace) {
-    String _value = localisedValues[key] ?? "$key";
+    String _value = localisedValues[key]?.toString() ?? key;
     for (int i = 0; i < replace.length; i++) {
       _value = _value.replaceAll('{$i}', replace[i].toString());
     }
     return _value;
   }
 }
-
-AppTranslations appTranslations;

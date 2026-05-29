@@ -102,7 +102,7 @@ class _HomeViewState extends State<HomeView> {
                 children: <Widget>[
                   Text(
                     AppTranslations.of(context).text('home_title'),
-                    style: Theme.of(context).textTheme.title,
+                    style: Theme.of(context).textTheme.titleLarge,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
@@ -146,11 +146,11 @@ class _HomeViewState extends State<HomeView> {
         child: Row(
           children: <Widget>[
             Text(
-              Config.instance.user.username,
+              Config.instance.user?.username ?? '',
               style: Theme.of(context)
                   .textTheme
-                  .button
-                  .merge(TextStyle(color: Theme.of(context).primaryColor)),
+                  .labelLarge
+                  ?.merge(TextStyle(color: Theme.of(context).primaryColor)),
             ),
             Icon(
               Icons.arrow_drop_down,

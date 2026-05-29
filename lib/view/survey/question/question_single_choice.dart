@@ -6,17 +6,29 @@ import 'package:initsurvey/view/survey/question/option/option_choice_ui.dart';
 import 'package:initsurvey/view/survey/question/option/option_input_ui.dart';
 
 class QuestionSingleChoice extends StatefulWidget {
-  const QuestionSingleChoice({this.index, this.question, this.result});
+  const QuestionSingleChoice({
+    required this.index,
+    required this.question,
+    required this.result,
+  });
 
   final int index;
   final Question question;
   final QuestionResult result;
 
   @override
-  _QuestionSingleChoiceState createState() => _QuestionSingleChoiceState();
+  State<QuestionSingleChoice> createState() => _QuestionSingleChoiceState();
 }
 
 class _QuestionSingleChoiceState extends State<QuestionSingleChoice> {
+  late TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController(text: "");
+  }
+
   @override
   Widget build(BuildContext context) {
     final question = widget.question;
@@ -26,17 +38,9 @@ class _QuestionSingleChoiceState extends State<QuestionSingleChoice> {
     );
   }
 
-  TextEditingController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = TextEditingController(text: "");
-  }
-
   Widget _buildOption(Option option) {
     final result = widget.result;
-    final bool isChoose = option.title.en == result.answer.option;
+    final bool isChoose = option.title?.en == result.answer.option;
 
     if (option.otherSpecify) {
       if (isChoose) {
@@ -50,28 +54,30 @@ class _QuestionSingleChoiceState extends State<QuestionSingleChoice> {
         child: TextField(
           controller: controller,
           decoration: InputDecoration(
-              labelText: option.title.text, border: InputBorder.none),
+              labelText: option.title?.text ?? '',
+              border: InputBorder.none),
           onChanged: (value) {
             result.answer.result = value;
           },
           onTap: () {
             if (isChoose == false) {
-              result.answer = Answer(option: option.title.en, result: "");
+              result.answer =
+                  Answer(option: option.title?.en ?? '', result: "");
             }
           },
         ),
       );
     } else {
       return OptionChoiceUI(
-        title: option.title.text,
+        title: option.title?.text ?? '',
         isChoose: isChoose,
         onPressed: isChoose
             ? null
             : () {
                 FocusScope.of(context).unfocus();
                 setState(() {
-                  result.answer =
-                      Answer(option: option.title.en, result: 'choose');
+                  result.answer = Answer(
+                      option: option.title?.en ?? '', result: 'choose');
                 });
               },
       );

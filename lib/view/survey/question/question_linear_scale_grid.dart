@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:initsurvey/core/utility.dart';
 import 'package:initsurvey/model/answer.dart';
@@ -7,14 +6,18 @@ import 'package:initsurvey/model/survey_result.dart';
 import 'package:initsurvey/view/survey/question/option/option_scale_ui.dart';
 
 class QuestionLinearScaleGrid extends StatefulWidget {
-  const QuestionLinearScaleGrid({this.index, this.question, this.result});
+  const QuestionLinearScaleGrid({
+    required this.index,
+    required this.question,
+    required this.result,
+  });
 
   final int index;
   final Question question;
   final QuestionResult result;
 
   @override
-  _QuestionLinearScaleGridState createState() =>
+  State<QuestionLinearScaleGrid> createState() =>
       _QuestionLinearScaleGridState();
 }
 
@@ -25,8 +28,8 @@ class _QuestionLinearScaleGridState extends State<QuestionLinearScaleGrid> {
     if (Utility.isNullOrEmpty(widget.result.answers)) {
       widget.result.answers = [];
       for (int i = 0; i < widget.question.option.length; i++) {
-        widget.result.answers
-            .add(Answer(option: widget.question.option[i].title.en));
+        widget.result.answers.add(
+            Answer(option: widget.question.option[i].title?.en ?? ''));
       }
     }
   }
@@ -51,8 +54,8 @@ class _QuestionLinearScaleGridState extends State<QuestionLinearScaleGrid> {
         Padding(
           padding: const EdgeInsets.only(bottom: 8, top: 16),
           child: Text(
-            "${indexOption + 1}. ${option.title.text}",
-            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
+            "${indexOption + 1}. ${option.title?.text ?? ''}",
+            style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18),
           ),
         ),
         Row(
@@ -67,8 +70,8 @@ class _QuestionLinearScaleGridState extends State<QuestionLinearScaleGrid> {
   }
 
   Widget _buildIndex(int indexOption, int index) {
-    final int result =
-        int.tryParse(widget.result.answers[indexOption].result ?? '');
+    final int? result =
+        int.tryParse(widget.result.answers[indexOption].result);
     final bool isChoice = result == index;
     return OptionScaleUI(
       index,

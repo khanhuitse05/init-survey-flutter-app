@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:vector_math/vector_math_64.dart';
 
 class AnimatedAppear extends StatefulWidget {
-  const AnimatedAppear(
-      {@required this.child, this.duration = _defaultDuration});
+  const AnimatedAppear({required this.child, this.duration = _defaultDuration});
 
   @override
-  _AnimatedAppearState createState() => _AnimatedAppearState();
+  State<AnimatedAppear> createState() => _AnimatedAppearState();
 
   final Widget child;
   final Duration duration;
@@ -17,8 +14,8 @@ class AnimatedAppear extends StatefulWidget {
 
 class _AnimatedAppearState extends State<AnimatedAppear>
     with SingleTickerProviderStateMixin {
-  AnimationController animationController;
-  Animation<double> animation;
+  late AnimationController animationController;
+  late Animation<double> animation;
 
   @override
   void initState() {
@@ -28,7 +25,7 @@ class _AnimatedAppearState extends State<AnimatedAppear>
       duration: widget.duration,
     )..addListener(() => setState(() {}));
 
-    final Animation curve =
+    final Animation<double> curve =
         CurvedAnimation(parent: animationController, curve: Curves.bounceOut);
 
     animation = Tween<double>(

@@ -3,20 +3,19 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.6.0 <3.0.0"
+  sdk: '>=3.11.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  provider: ^4.0.4
-  connectivity: ^0.4.8+2
-  shared_preferences: ^0.5.6+3
-  http: ^0.12.0+4
-  webview_flutter: ^0.3.19+9
-
-  cupertino_icons: ^0.1.2
+  provider: ^6.1.2
+  connectivity: ^3.0.6
+  shared_preferences: ^2.2.2
+  http: ^1.2.1
+  webview_flutter: ^4.7.0
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
@@ -29,40 +28,9 @@ flutter:
     - assets/images/ui/
     - assets/images/locale/
     - assets/images/pattern/
-    # Data
     - assets/datas/
     - assets/administrations/
     - assets/administrations/quan-huyen/
     - assets/administrations/xa-phuong/
-    # Locale
     - assets/locale/en/
     - assets/locale/vi/
-  
-  
-  
-
-  
-  
-
-  
-  
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  

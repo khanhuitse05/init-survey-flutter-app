@@ -19,34 +19,31 @@ void main() {
     DeviceOrientation.portraitDown,
   ]);
 
-//  ErrorWidget.builder = (FlutterErrorDetails details) => Container(
-//    alignment: Alignment.center,
-//    child: Icon(Icons.error),
-//  );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  static final GlobalKey<NavigatorState> navKey =  GlobalKey<NavigatorState>();
+  const MyApp({super.key});
+
+  static final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
 
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  AppTranslationsDelegate _newLocaleDelegate;
+  late AppTranslationsDelegate _newLocaleDelegate;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_)=>SurveyProvider(),)
+        ChangeNotifierProvider(create: (_) => SurveyProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         localizationsDelegates: [
           _newLocaleDelegate,
-          const AppTranslationsDelegate(),
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
@@ -55,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         title: 'My Flutter App',
         theme: primaryTheme,
         initialRoute: '/',
-        onGenerateRoute: Router.generateRoute,
+        onGenerateRoute: AppRouter.generateRoute,
       ),
     );
   }
@@ -63,7 +60,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _newLocaleDelegate = AppTranslationsDelegate(newLocale: null);
+    _newLocaleDelegate = const AppTranslationsDelegate();
     Application.instance.onLocaleChanged.stream.listen(onLocaleChange);
 
     SystemChrome.setPreferredOrientations([

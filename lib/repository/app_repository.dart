@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:core';
 
-class AppRepository{
-
+class AppRepository {
   static bool isSuccess(String body) {
     try {
-      var message = json.decode(body);
+      final message = json.decode(body);
       return message['status'] == 'success';
     } catch (e) {
       return false;
@@ -14,8 +12,8 @@ class AppRepository{
 
   static String getMessage(String body) {
     try {
-      var message = json.decode(body);
-      return message['message'];
+      final message = json.decode(body);
+      return message['message']?.toString() ?? '';
     } catch (e) {
       return '';
     }

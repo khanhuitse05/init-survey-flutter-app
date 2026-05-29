@@ -1,19 +1,20 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:initsurvey/core/utility.dart';
 import 'package:initsurvey/search_address/place_data.dart';
 import 'package:initsurvey/search_address/place_detail.dart';
 import 'package:initsurvey/search_address/search_address_provider.dart';
-import 'package:initsurvey/theme/app_styles.dart';
 import 'package:initsurvey/ui/utility/app_snackbar.dart';
 import 'package:initsurvey/ui/utility/indicator.dart';
 import 'package:initsurvey/ui/utility/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
 class SearchAddressView extends StatefulWidget {
+  const SearchAddressView({super.key});
+
   @override
-  _SearchAddressViewState createState() => _SearchAddressViewState();
+  State<SearchAddressView> createState() => _SearchAddressViewState();
 }
 
 class _SearchAddressViewState extends State<SearchAddressView> {
@@ -25,13 +26,13 @@ class _SearchAddressViewState extends State<SearchAddressView> {
           providers: [
             ChangeNotifierProvider(create: (_) => SearchAddressProvider()),
           ],
-          child: Column(
+          child: const Column(
             children: <Widget>[
               SearchInput(),
               Expanded(
                 flex: 1,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 5, 30, 0),
+                  padding: EdgeInsets.fromLTRB(30, 5, 30, 0),
                   child: SearchListItem(),
                 ),
               )
@@ -44,12 +45,14 @@ class _SearchAddressViewState extends State<SearchAddressView> {
 }
 
 class SearchInput extends StatefulWidget {
+  const SearchInput({super.key});
+
   @override
-  _SearchInputState createState() => _SearchInputState();
+  State<SearchInput> createState() => _SearchInputState();
 }
 
 class _SearchInputState extends State<SearchInput> {
-  TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {
@@ -67,14 +70,14 @@ class _SearchInputState extends State<SearchInput> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(11, 10, 11, 0),
-      height: (80),
+      height: 80,
       width: double.infinity,
       child: Card(
         child: Row(
           children: <Widget>[
-            if (Platform.isIOS)
+            if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS)
               IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: const Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -85,10 +88,12 @@ class _SearchInputState extends State<SearchInput> {
                   controller: controller,
                   autofocus: true,
                   decoration: InputDecoration(
-                      icon: Container(
-                        width: 35,
-                        child: Icon(Icons.search),
+                      icon: Align(
                         alignment: AlignmentDirectional.centerEnd,
+                        child: SizedBox(
+                          width: 35,
+                          child: const Icon(Icons.search),
+                        ),
                       ),
                       contentPadding: const EdgeInsets.only(top: 1),
                       border: InputBorder.none,
@@ -105,7 +110,7 @@ class _SearchInputState extends State<SearchInput> {
               alignment: AlignmentDirectional.center,
               width: 40,
               child: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.clear,
                   color: Colors.black45,
                 ),
@@ -126,6 +131,8 @@ class _SearchInputState extends State<SearchInput> {
 }
 
 class SearchListItem extends StatelessWidget {
+  const SearchListItem({super.key});
+
   @override
   Widget build(BuildContext context) {
     final SearchAddressProvider search = Provider.of(context);
@@ -135,20 +142,20 @@ class SearchListItem extends StatelessWidget {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                selectPlace(context, search.result[index]);
+                selectPlace(context, search.result![index]);
               },
-              child: Container(
-                height: (90),
+              child: SizedBox(
+                height: 90,
                 child: Row(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20),
+                    const Padding(
+                      padding: EdgeInsets.only(right: 20),
                       child: Icon(Icons.place),
                     ),
                     Expanded(
                       flex: 1,
                       child: Text(
-                        search.result[index].description,
+                        search.result![index].description,
                         maxLines: 2,
                       ),
                     ),
@@ -163,7 +170,7 @@ class SearchListItem extends StatelessWidget {
               color: Colors.black45,
             );
           },
-          itemCount: search.result.length);
+          itemCount: search.result!.length);
     } else {
       if (Utility.isNullOrEmpty(search.text)) {
         return Container();
@@ -177,15 +184,17 @@ class SearchListItem extends StatelessWidget {
     }
   }
 
-  Future selectPlace(BuildContext context, Predictions predictions) async {
+  Future<void> selectPlace(
+      BuildContext context, Predictions predictions) async {
     showLoading(context);
-    final PlaceDetailData data =
+    final PlaceDetailData? data =
         await SearchAddressProvider.getPlaceDetail(predictions.placeId);
     hideLoading(context);
     if (data != null) {
       Navigator.pop(context);
     } else {
-      Scaffold.of(context).showSnackBar(mySnackBar('Get place detail fail!'));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(mySnackBar('Get place detail fail!'));
     }
   }
 }

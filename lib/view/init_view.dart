@@ -43,9 +43,9 @@ class _InitViewState extends State<InitView> {
     onLogin();
   }
 
-  Future onLogin() async {
-    final User user = await Config.instance.loadUser();
-    final String token = await Config.instance.loadToken();
+  Future<void> onLogin() async {
+    final User? user = await Config.instance.loadUser();
+    final String? token = await Config.instance.loadToken();
 
     if (user != null && Utility.isNullOrEmpty(token) == false) {
       final SurveyProvider survey =

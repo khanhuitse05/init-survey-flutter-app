@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 class GradientButton extends StatelessWidget {
-  const GradientButton(
-      {@required this.child, @required this.onPressed, this.gradient});
+  const GradientButton({
+    required this.child,
+    required this.onPressed,
+    this.gradient,
+  });
 
   final Widget child;
   final VoidCallback onPressed;
-  final Gradient gradient;
+  final Gradient? gradient;
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +26,17 @@ class GradientButton extends StatelessWidget {
         gradient: gradient ??
             LinearGradient(
               colors: [
-                Colors.orange[100],
+                Colors.orange.shade100,
                 Colors.orange,
               ],
             ),
       ),
-      child: FlatButton(
+      child: TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
         onPressed: onPressed,
         child: child,
       ),

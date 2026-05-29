@@ -1,14 +1,15 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 String _dialogMessage = '';
 StreamController<String> _streamController =
-StreamController<String>.broadcast();
+    StreamController<String>.broadcast();
 
-_ProgressDialog _progressDialog;
+_ProgressDialog? _progressDialog;
 
 void showLoading(BuildContext context, {String message = ''}) {
   if (_progressDialog == null) {
@@ -19,7 +20,7 @@ void showLoading(BuildContext context, {String message = ''}) {
 
 void hideLoading(BuildContext context) {
   if (_progressDialog != null) {
-    _progressDialog.hide(context);
+    _progressDialog!.hide(context);
     _progressDialog = null;
   }
 }
@@ -62,23 +63,22 @@ class _ProgressDialog {
                         height: 80,
                         padding: const EdgeInsets.all(20),
                         alignment: Alignment.center,
-                        child: Platform.isIOS
+                        child: !kIsWeb &&
+                                defaultTargetPlatform == TargetPlatform.iOS
                             ? const CupertinoActivityIndicator(
-                          radius: 15,
-                        )
+                                radius: 15,
+                              )
                             : SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: CircularProgressIndicator(
-                            backgroundColor: Colors.white,
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation(
-                                Theme.of(context).primaryColor),
-                          ),
-                        ),
+                                width: 30,
+                                height: 30,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation(
+                                      Theme.of(context).primaryColor),
+                                ),
+                              ),
                       ),
-
-                      /// Bottom
                       if (_dialogMessage.isNotEmpty)
                         Container(
                           padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
@@ -86,7 +86,7 @@ class _ProgressDialog {
                           child: Text(
                             _dialogMessage,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,

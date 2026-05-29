@@ -66,7 +66,7 @@ class ButtonSyncChild extends StatelessWidget {
                   height: 12,
                   child: Text(
                     Provider.of<SyncSurveyProvider>(context)
-                        .surveys
+                        .surveys!
                         .length
                         .toString(),
                     textAlign: TextAlign.center,
@@ -128,8 +128,9 @@ class ButtonSyncChild extends StatelessWidget {
   }
 
   Widget buildButton(BuildContext context,
-      {GestureTapCallback onTap, Widget icon}) {
-    return FlatButton(
+      {VoidCallback? onTap, required Widget icon}) {
+    return TextButton(
+      style: TextButton.styleFrom(padding: EdgeInsets.zero),
       onPressed: onTap,
       child: Row(
         children: <Widget>[

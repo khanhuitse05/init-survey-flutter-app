@@ -7,24 +7,22 @@ import 'package:initsurvey/model/survey_result.dart';
 import 'package:initsurvey/repository/app_repository.dart';
 import 'package:http/http.dart' as http;
 
-///
 class SurveyRepository {
-  static Future<Map> sent(SurveyResult survey) async {
-
+  static Future<Map<String, dynamic>> sent(SurveyResult survey) async {
     await Future.delayed(const Duration(seconds: 1));
     return {'status': 'success'};
 
-    // todo: Update api later
+    // ignore: dead_code
     final String url = '${kDomainApi}save-homemart-survey';
-    debugPrint(const JsonEncoder.withIndent(" ").convert(survey),
+    debugPrint(const JsonEncoder.withIndent(' ').convert(survey),
         wrapWidth: 1024);
     try {
       final header = {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer ${Config.instance.token}"
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${Config.instance.token}'
       };
       final response = await http
-          .post(url,
+          .post(Uri.parse(url),
               headers: header, body: json.encode(survey.toJson()).toString())
           .timeout(const Duration(seconds: 10));
 

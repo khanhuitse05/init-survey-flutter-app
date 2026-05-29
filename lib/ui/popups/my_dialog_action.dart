@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 
 class MyDialogAction extends StatelessWidget {
-  const MyDialogAction(this.text,
-      {this.onPressed});
+  const MyDialogAction(this.text, {this.onPressed});
 
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
+    return TextButton(
+      style: TextButton.styleFrom(padding: EdgeInsets.zero),
       child: Text(
         text,
         style: TextStyle(color: Theme.of(context).primaryColor),
       ),
       onPressed: () {
         Navigator.pop(context);
-        if (onPressed != null) {
-          onPressed();
-        }
+        onPressed?.call();
       },
     );
   }

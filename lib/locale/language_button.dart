@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'application.dart';
 
 class LanguageButton extends StatefulWidget {
+  const LanguageButton({super.key});
+
   @override
-  _LanguageButtonState createState() => _LanguageButtonState();
+  State<LanguageButton> createState() => _LanguageButtonState();
 }
 
 class _LanguageButtonState extends State<LanguageButton> {
-
-  Map flags;
+  late Map<String, String> flags;
+  late int currentIndex;
 
   List<String> get languageCodesList =>
       Application.instance.supportedLanguagesCodes;
@@ -17,14 +19,14 @@ class _LanguageButtonState extends State<LanguageButton> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    flags = new Map();
+    flags = {};
+    currentIndex = 0;
     for (var i = 0; i < languageCodesList.length; i++) {
-      var code = languageCodesList[i];
-      flags[code]= 'assets/images/locale/$code.png';
-      if(code == selectedLanguageCode){
+      final code = languageCodesList[i];
+      flags[code] = 'assets/images/locale/$code.png';
+      if (code == selectedLanguageCode) {
         currentIndex = i;
       }
     }
@@ -36,23 +38,20 @@ class _LanguageButtonState extends State<LanguageButton> {
       onPressed: () {
         clickLanguage(context);
       },
-      icon: Container(
+      icon: SizedBox(
         width: 24,
         height: 24,
-        child:
-        Image.asset(flags[selectedLanguageCode] ?? flags['en']),
+        child: Image.asset(flags[selectedLanguageCode] ?? flags['en']!),
       ),
     );
   }
 
-  int currentIndex;
   void clickLanguage(BuildContext context) {
     currentIndex++;
-    if(currentIndex >= languageCodesList.length){
+    if (currentIndex >= languageCodesList.length) {
       currentIndex = 0;
     }
     Application.instance.changeLanguage(languageCodesList[currentIndex]);
     setState(() {});
-
   }
 }

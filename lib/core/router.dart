@@ -8,9 +8,8 @@ import 'package:initsurvey/view/login_view.dart';
 import 'package:initsurvey/view/result_view.dart';
 import 'package:initsurvey/view/survey/survey_view.dart';
 
-class Router {
+class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    /// add settings on MaterialPageRoute for which route you want to tracking
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(
@@ -23,7 +22,9 @@ class Router {
             builder: (_) => HomeView(), settings: settings);
       case '/result-view':
         return MaterialPageRoute(
-            builder: (_) => ResultView(settings.arguments), settings: settings);
+            builder: (_) =>
+                ResultView(settings.arguments as Map<dynamic, dynamic>),
+            settings: settings);
       case '/contact':
         return MaterialPageRoute(
             builder: (_) => ContactView(), settings: settings);
@@ -35,12 +36,11 @@ class Router {
             builder: (_) => SearchAddressView(), settings: settings);
       default:
         return MaterialPageRoute(
-            builder: (_) => EmptyView(title: settings.name));
+            builder: (_) => EmptyView(title: settings.name ?? ''));
     }
   }
 
-  static String getNameExtractor(RouteSettings settings) {
-    /// User for override route's name
+  static String? getNameExtractor(RouteSettings settings) {
     switch (settings.name) {
       case '/':
         return null;

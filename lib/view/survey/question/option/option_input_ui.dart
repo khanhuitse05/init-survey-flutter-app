@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-final Color _colorShadowNormal = Colors.grey[400];
-final Color _colorNormal = Colors.white;
+final Color _colorShadowNormal = Colors.grey.shade400;
+const Color _colorNormal = Colors.white;
 
-final Color _colorShadowHighlight = Colors.blue;
-final Color _colorHighlight = Colors.blue[50];
+const Color _colorShadowHighlight = Colors.blue;
+final Color _colorHighlight = Colors.blue.shade50;
 
 class OptionInputUI extends StatelessWidget {
-  const OptionInputUI({this.child, this.isChoose});
+  const OptionInputUI({required this.child, required this.isChoose});
 
   final bool isChoose;
   final Widget child;

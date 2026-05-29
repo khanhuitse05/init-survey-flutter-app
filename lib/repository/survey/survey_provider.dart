@@ -11,21 +11,21 @@ class SurveyProvider extends ChangeNotifier {
 
   void onReset() {
     indexQuestion = 0;
-    results = SurveyResult()..questions = [];
+    results = SurveyResult(questions: []);
     pageController = PageController(initialPage: 0);
     for (var i = 0; i < data.length; i++) {
       final _question = data[i];
       results.questions.add(
         QuestionResult(
             id: _question.id,
-            question: _question.title.en,
+            question: _question.title?.en ?? '',
             type: _question.type),
       );
     }
   }
 
-  SurveyResult results;
-  List<Question> data;
+  late SurveyResult results;
+  List<Question> data = [];
 
   QuestionResult resultByIndex(int index) {
     return results.questions[index];
@@ -35,12 +35,12 @@ class SurveyProvider extends ChangeNotifier {
 
   bool get hasData => Utility.isNullOrEmpty(data) == false;
 
-  Future loadQuestionData() async {
+  Future<void> loadQuestionData() async {
     data = await QuestionRepository.loadQuestionFormFile();
   }
 
   PageController pageController = PageController(initialPage: 0);
-  int indexQuestion;
+  int indexQuestion = 0;
 
   void pingNotify() {
     notifyListeners();
@@ -50,8 +50,8 @@ class SurveyProvider extends ChangeNotifier {
     if (resultByIndex(indexQuestion).validate()) {
       nextQuestion(context);
     } else {
-      Scaffold.of(context).showSnackBar(mySnackBar(
-          AppTranslations.of(context).text("question_not_answered")));
+      ScaffoldMessenger.of(context).showSnackBar(mySnackBar(
+          AppTranslations.of(context).text('question_not_answered')));
     }
   }
 

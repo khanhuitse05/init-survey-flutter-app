@@ -12,32 +12,38 @@ import 'package:provider/provider.dart';
 
 class ContactView extends StatefulWidget {
   @override
-  _ContactViewState createState() => _ContactViewState();
+  State<ContactView> createState() => _ContactViewState();
 }
 
 class _ContactViewState extends State<ContactView> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
 
-  final _keyScaffold = GlobalKey<ScaffoldState>();
+  final TextEditingController _controllerProvince = TextEditingController();
+  final TextEditingController _controllerDistrict = TextEditingController();
+  final TextEditingController _controllerWards = TextEditingController();
+  final FocusNode _streetFocusNode = FocusNode();
+  Administrations? _province;
+  Administrations? _district;
+  Administrations? _wards;
 
   @override
   Widget build(BuildContext context) {
     final SurveyProvider survey = Provider.of(context);
-    return WillPopScope(
-      onWillPop: () async {
-        await IconButtonHome.showConfirmQuit(context);
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        IconButtonHome.showConfirmQuit(context);
       },
       child: Scaffold(
-        key: _keyScaffold,
         appBar: AppBar(
           title: Text(
             AppTranslations.of(context).text('contact'),
-            style: TextStyle(color: Colors.black87),
+            style: const TextStyle(color: Colors.black87),
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () {
               IconButtonHome.showConfirmQuit(context);
             },
@@ -49,7 +55,7 @@ class _ContactViewState extends State<ContactView> {
           child: GradientButton(
             child: Text(
               AppTranslations.of(context).text('submit').toUpperCase(),
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
             onPressed: () {
               onSubmit(context, survey);
@@ -58,13 +64,15 @@ class _ContactViewState extends State<ContactView> {
         ),
         body: Form(
           key: _formKey,
-          autovalidate: _autoValidate,
+          autovalidateMode: _autoValidate
+              ? AutovalidateMode.always
+              : AutovalidateMode.disabled,
           child: ListView(
             padding: const EdgeInsets.all(32),
             children: <Widget>[
               Text(
                 AppTranslations.of(context).text('contact_title'),
-                style: Theme.of(context).textTheme.title,
+                style: Theme.of(context).textTheme.titleLarge,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -73,7 +81,7 @@ class _ContactViewState extends State<ContactView> {
                     labelText:
                         AppTranslations.of(context).text('full_name') + " (*)"),
                 validator: (value) {
-                  if (value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return 'The username is invalid.';
                   }
                   return null;
@@ -89,7 +97,7 @@ class _ContactViewState extends State<ContactView> {
                         AppTranslations.of(context).text('phone') + " (*)"),
                 keyboardType: TextInputType.phone,
                 validator: (value) {
-                  if (value.isEmpty || value.length > 10) {
+                  if (value == null || value.isEmpty || value.length > 10) {
                     return 'The phone number is invalid (10 digits).';
                   }
                   return null;
@@ -179,15 +187,17 @@ class _ContactViewState extends State<ContactView> {
     );
   }
 
-  onSubmit(BuildContext context, SurveyProvider survey) {
-    _autoValidate = true;
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+  void onSubmit(BuildContext context, SurveyProvider survey) {
+    setState(() {
+      _autoValidate = true;
+    });
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       sentData(survey.results);
     }
   }
 
-  Future sentData(survey) async {
+  Future<void> sentData(survey) async {
     final response = await SurveyRepository.sent(survey);
     if (response['status'] == 'success') {
       await Navigator.pushReplacementNamed(context, '/result-view',
@@ -200,26 +210,19 @@ class _ContactViewState extends State<ContactView> {
               arguments: {"message": "false"});
           break;
         default:
-          _keyScaffold.currentState.showSnackBar(mySnackBar(message));
+          ScaffoldMessenger.of(context).showSnackBar(mySnackBar(message));
           break;
       }
     }
   }
 
-  final TextEditingController _controllerProvince = TextEditingController();
-  final TextEditingController _controllerDistrict = TextEditingController();
-  final TextEditingController _controllerWards = TextEditingController();
-  final FocusNode _streetFocusNode = FocusNode();
-  Administrations _province;
-  Administrations _district;
-  Administrations _wards;
-
-  Future _showAddress(AdministrationsLevel level, {Duration delay}) async {
+  Future<void> _showAddress(AdministrationsLevel level,
+      {Duration? delay}) async {
     if (delay != null) {
       await Future.delayed(delay);
     }
-    final String codeParent = getParentCode(level);
-    final String codeCurrent = getCurrentCode(level);
+    final String? codeParent = getParentCode(level);
+    final String? codeCurrent = getCurrentCode(level);
     if (codeParent != null || level == AdministrationsLevel.province) {
       await showModalBottomSheet(
           context: context,
@@ -236,7 +239,7 @@ class _ContactViewState extends State<ContactView> {
               currentCode: codeCurrent,
             );
           });
-    } else {}
+    }
   }
 
   void _selectItem(Administrations region, AdministrationsLevel level) {
@@ -267,43 +270,37 @@ class _ContactViewState extends State<ContactView> {
     setState(() {});
   }
 
-  String getParentCode(AdministrationsLevel level) {
+  String? getParentCode(AdministrationsLevel level) {
     switch (level) {
       case AdministrationsLevel.district:
         if (_province == null) {
-          _keyScaffold.currentState.showSnackBar(mySnackBar('Chọn tỉnh trước'));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(mySnackBar('Chọn tỉnh trước'));
           return null;
         }
         return _province?.code;
-        break;
-
       case AdministrationsLevel.wards:
         if (_district == null) {
-          _keyScaffold.currentState.showSnackBar(mySnackBar('Chọn quận trước'));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(mySnackBar('Chọn quận trước'));
           return null;
         }
         return _district?.code;
-        break;
       default:
         return null;
-        break;
     }
   }
 
-  String getCurrentCode(AdministrationsLevel level) {
+  String? getCurrentCode(AdministrationsLevel level) {
     switch (level) {
       case AdministrationsLevel.province:
         return _province?.code;
-        break;
       case AdministrationsLevel.district:
         return _district?.code;
-        break;
       case AdministrationsLevel.wards:
         return _wards?.code;
-        break;
       default:
         return null;
-        break;
     }
   }
 }

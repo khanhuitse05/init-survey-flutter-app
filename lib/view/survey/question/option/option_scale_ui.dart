@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class OptionScaleUI extends StatelessWidget {
-  const OptionScaleUI(this.index, {this.onPressed, this.isChoice});
+  const OptionScaleUI(this.index,
+      {required this.onPressed, required this.isChoice});
 
   final int index;
   final VoidCallback onPressed;
   final bool isChoice;
 
-  final Color _color = Colors.black87;
-  final Color _colorHighlight = Colors.blue;
+  static const Color _color = Colors.black87;
+  static const Color _colorHighlight = Colors.blue;
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +25,13 @@ class OptionScaleUI extends StatelessWidget {
         ),
         IconButton(
           onPressed: onPressed,
-           icon: Icon( isChoice
-               ? Icons.radio_button_checked
-               : Icons.radio_button_unchecked,
-               color: isChoice ? _colorHighlight : _color),)
+          icon: Icon(
+            isChoice
+                ? Icons.radio_button_checked
+                : Icons.radio_button_unchecked,
+            color: isChoice ? _colorHighlight : _color,
+          ),
+        )
       ],
     );
   }

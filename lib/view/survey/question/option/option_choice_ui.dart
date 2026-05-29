@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
-TextStyle _optionStyle({Color color}) =>
+TextStyle _optionStyle({Color? color}) =>
     TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: color);
 
-final Color _colorShadowNormal = Colors.grey[400];
-final Color _colorNormal = Colors.white;
+final Color _colorShadowNormal = Colors.grey.shade400;
+const Color _colorNormal = Colors.white;
 
-final Color _colorShadowHighlight = Colors.blue;
-final Color _colorHighlight = Colors.blue[50];
+const Color _colorShadowHighlight = Colors.blue;
+final Color _colorHighlight = Colors.blue.shade50;
 
 class OptionChoiceUI extends StatelessWidget {
-  const OptionChoiceUI({this.title, this.onPressed, this.isChoose});
+  const OptionChoiceUI({
+    required this.title,
+    required this.isChoose,
+    this.onPressed,
+  });
 
   final String title;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final bool isChoose;
 
   @override

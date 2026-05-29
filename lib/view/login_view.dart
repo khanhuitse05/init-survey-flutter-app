@@ -11,20 +11,20 @@ import 'package:initsurvey/ui/utility/progress_dialog.dart';
 
 class LoginView extends StatefulWidget {
   @override
-  _LoginViewState createState() => _LoginViewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
-
   bool _showPassword = false;
-  final GlobalKey<ScaffoldState> _keyScaffold = GlobalKey<ScaffoldState>();
+
+  String username = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _keyScaffold,
       backgroundColor: Colors.white,
       body: Stack(
         fit: StackFit.expand,
@@ -32,7 +32,7 @@ class _LoginViewState extends State<LoginView> {
           PatternTop(),
           Container(
             alignment: Alignment.bottomCenter,
-            child: Container(
+            child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Image.asset(
                 "assets/images/ui/bottom.png",
@@ -50,7 +50,9 @@ class _LoginViewState extends State<LoginView> {
               },
               child: Form(
                 key: _formKey,
-                autovalidate: _autoValidate,
+                autovalidateMode: _autoValidate
+                    ? AutovalidateMode.always
+                    : AutovalidateMode.disabled,
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -58,7 +60,7 @@ class _LoginViewState extends State<LoginView> {
                     children: <Widget>[
                       Text(
                         AppTranslations.of(context).text('login_title'),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w600),
                         textAlign: TextAlign.center,
                       ),
@@ -67,18 +69,18 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       TextFormField(
                         decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.account_box),
+                          prefixIcon: const Icon(Icons.account_box),
                           labelText:
                               AppTranslations.of(context).text('username'),
                         ),
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return 'The username is invalid.';
                           }
                           return null;
                         },
                         onSaved: (value) {
-                          username = value;
+                          username = value ?? '';
                         },
                       ),
                       const SizedBox(
@@ -86,7 +88,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       TextFormField(
                         decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock),
+                            prefixIcon: const Icon(Icons.lock),
                             labelText:
                                 AppTranslations.of(context).text('password'),
                             suffixIcon: IconButton(
@@ -102,7 +104,7 @@ class _LoginViewState extends State<LoginView> {
                         obscureText: _showPassword,
                         validator: Validators.password,
                         onSaved: (value) {
-                          password = value;
+                          password = value ?? '';
                         },
                       ),
                       const SizedBox(height: 30),
@@ -119,10 +121,10 @@ class _LoginViewState extends State<LoginView> {
                                   AppTranslations.of(context)
                                       .text('submit')
                                       .toUpperCase(),
-                                  style: TextStyle(color: Colors.white),
+                                  style: const TextStyle(color: Colors.white),
                                 ),
                                 const SizedBox(width: 10),
-                                Icon(
+                                const Icon(
                                   Icons.arrow_forward,
                                   color: Colors.white,
                                 ),
@@ -143,13 +145,12 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  String username = '';
-  String password = '';
-
-  Future onLogin() async {
-    _autoValidate = true;
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+  Future<void> onLogin() async {
+    setState(() {
+      _autoValidate = true;
+    });
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       showLoading(context);
       final result = await LoginRepository.login(username, password);
       hideLoading(context);
@@ -158,7 +159,8 @@ class _LoginViewState extends State<LoginView> {
         Config.instance.saveUser(User(username: username, password: password));
         await Navigator.pushReplacementNamed(context, '/home');
       } else {
-        _keyScaffold.currentState.showSnackBar(mySnackBar(result['message']));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(mySnackBar(result['message']));
       }
     }
   }

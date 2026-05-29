@@ -1,16 +1,15 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Indicator extends StatelessWidget {
-
   const Indicator({this.radius = 15});
   final double radius;
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isIOS) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
       return Center(
         child: CupertinoActivityIndicator(
           radius: radius,

@@ -18,15 +18,15 @@ class EmptyView extends StatelessWidget {
           children: <Widget>[
             Text(
               '404',
-              style: Theme.of(context).textTheme.display2,
+              style: Theme.of(context).textTheme.displayMedium,
             ),
             Text(
               'OOPS! TRANG KHÔNG TỒN TẠI',
-              style: Theme.of(context).textTheme.title,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 10),
-            RaisedButton(
-              child: Text(
+            ElevatedButton(
+              child: const Text(
                 'TRỞ VỀ TRANG CHỦ',
                 style: TextStyle(color: Colors.white),
               ),

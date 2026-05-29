@@ -4,7 +4,7 @@ import 'package:initsurvey/model/survey.dart';
 import 'package:initsurvey/model/survey_result.dart';
 
 class QuestionShortAnswer extends StatefulWidget {
-  const QuestionShortAnswer({this.index, this.question, this.result});
+  const QuestionShortAnswer({required this.index, required this.question, required this.result});
 
   final int index;
   final Question question;
@@ -15,7 +15,7 @@ class QuestionShortAnswer extends StatefulWidget {
 }
 
 class _QuestionShortAnswerState extends State<QuestionShortAnswer> {
-  TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {

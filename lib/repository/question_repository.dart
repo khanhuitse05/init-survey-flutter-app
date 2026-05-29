@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:initsurvey/core/cconfig.dart';
@@ -8,27 +8,25 @@ import 'package:initsurvey/core/constans.dart';
 import 'package:initsurvey/model/survey.dart';
 
 class QuestionRepository {
-
-  // todo: Update API later
-  static Future loadQuestionData() async {
+  static Future<List<Question>?> loadQuestionData() async {
     final url = '${kDomainApi}homemart-questions';
     try {
       final header = {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer ${Config.instance.token}"
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${Config.instance.token}'
       };
 
       final response = await http
-          .get(url, headers: header)
+          .get(Uri.parse(url), headers: header)
           .timeout(const Duration(seconds: 10));
 
       debugPrint(response.body);
-      if (response.statusCode == HttpStatus.ok) {
+      if (response.statusCode == 200) {
         final message = json.decode(response.body);
-        final data = [];
+        final data = <Question>[];
         message.forEach(
           (v) {
-            data.add(Question.fromJson(v));
+            data.add(Question.fromJson(v as Map<String, dynamic>));
           },
         );
         return data;
@@ -40,14 +38,14 @@ class QuestionRepository {
   }
 
   static Future<List<Question>> loadQuestionFormFile() async {
-    const String fileName = "assets/datas/data.json";
+    const String fileName = 'assets/datas/data.json';
     final String jsonContent = await rootBundle.loadString(fileName);
     final message = json.decode(jsonContent);
 
     final List<Question> data = [];
     message.forEach(
       (v) {
-        data.add(Question.fromJson(v));
+        data.add(Question.fromJson(v as Map<String, dynamic>));
       },
     );
     return data;

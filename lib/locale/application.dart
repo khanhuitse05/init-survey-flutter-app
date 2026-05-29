@@ -7,33 +7,28 @@ class Application {
 
   factory Application() => instance;
 
-  Application._internal() {
-    /// init
-  }
+  Application._internal();
 
-  final List<String> supportedLanguages = ["English", "Tiếng việt"];
+  final List<String> supportedLanguages = ['English', 'Tiếng việt'];
 
-  final List<String> supportedLanguagesCodes = ["en", "vi"];
+  final List<String> supportedLanguagesCodes = ['en', 'vi'];
 
   final remoteUrl =
       'http://dev-mobileapp.bigc.vn:8080/files/mobile-app/locale/';
 
   final locale = {
-    'en': ["main", "common"],
-    'vi': ["main", "common"]
+    'en': ['main', 'common'],
+    'vi': ['main', 'common']
   };
 
-  //returns the list of supported Locales
   Iterable<Locale> supportedLocales() =>
-      supportedLanguagesCodes.map<Locale>((language) => Locale(language, ""));
+      supportedLanguagesCodes.map<Locale>((language) => Locale(language));
 
-  var onLocaleChanged = StreamController<Locale>.broadcast();
+  final onLocaleChanged = StreamController<Locale>.broadcast();
 
-  changeLanguage(String languageCode) async {
-    /// save to locale
+  Future<void> changeLanguage(String languageCode) async {
     final prefInstance = await SharedPreferences.getInstance();
-    await prefInstance.setString("language_code", languageCode);
-    /// set language
+    await prefInstance.setString('language_code', languageCode);
     onLocaleChanged.add(Locale(languageCode));
   }
 }

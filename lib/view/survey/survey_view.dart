@@ -17,10 +17,11 @@ class _SurveyViewState extends State<SurveyView> {
   @override
   Widget build(BuildContext context) {
     final SurveyProvider provider = Provider.of(context);
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         provider.previousQuestion(context);
-        return false;
       },
       child: Scaffold(
         body: SafeArea(
@@ -92,16 +93,17 @@ class _ButtonSubmit extends StatelessWidget {
           color: Colors.lightGreen,
           boxShadow: [
             BoxShadow(
-              color: Colors.green[700],
+              color: Colors.green.shade700,
               blurRadius: 0,
               offset: const Offset(0, 4),
               spreadRadius: 0,
             )
           ]),
-      child: FlatButton(
+      child: TextButton(
+        style: TextButton.styleFrom(padding: EdgeInsets.zero),
         child: Text(
           AppTranslations.of(context).text('next').toUpperCase(),
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         onPressed: () {
           FocusScope.of(context).unfocus();
